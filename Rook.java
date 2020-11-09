@@ -1,6 +1,6 @@
 public class Rook extends Piece {
-	public Rook(boolean white) {
-		super(white, "R");
+	public Rook(boolean white, Board board) {
+		super(white, "R", board);
 	}
 	
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {
@@ -21,8 +21,8 @@ public class Rook extends Piece {
 			}
 			
 			for (int i=greater-1; lesser<i; i--) {
-				System.out.println(i + "," + fromRank + "," + (!ChessEngine.Board[i][fromRank].empty));
-				if (!ChessEngine.Board[fromRank][i].empty) {
+				System.out.println(i + "," + fromRank + "," + (!myBoard.pieces[i][fromRank].empty));
+				if (!myBoard.pieces[fromRank][i].empty) {
 					return false;
 				}
 			}
@@ -35,7 +35,7 @@ public class Rook extends Piece {
 			}
 			
 			for (int i=greater-1; lesser<i; i--) {
-				if (!ChessEngine.Board[i][fromFile].empty) {
+				if (!myBoard.pieces[i][fromFile].empty) {
 					return false;
 				}
 			}

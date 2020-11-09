@@ -1,5 +1,5 @@
 public class NoPiece extends Piece {
-	public NoPiece() {
-		super(" ");
+	public NoPiece(Board board) {
+		super(" ", board);
 	}
 }

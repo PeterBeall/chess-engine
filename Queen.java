@@ -1,6 +1,6 @@
 public class Queen extends Piece {
-	public Queen(boolean white) {
-		super(white, "Q");
+	public Queen(boolean white, Board board) {
+		super(white, "Q", board);
 	}
 	
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {
@@ -28,13 +28,13 @@ public class Queen extends Piece {
 			for (int i=greaterFile-1; lesserFile<i; i--) {
 				if ((fromFile==greaterFile && fromRank==greaterRank) || (fromFile==lesserFile && fromRank==lesserRank)) {
 					for (int j=greaterRank-1; lesserRank<j; j--) {
-						if (!ChessEngine.Board[i][j].empty) {
+						if (!myBoard.pieces[i][j].empty) {
 							likeBishop = false;
 						}
 					}
 				}else {
 					for (int j=lesserRank+1; greaterRank>j; j++) {
-						if (!ChessEngine.Board[i][j].empty) {
+						if (!myBoard.pieces[i][j].empty) {
 							likeBishop = false;
 						}
 					}
@@ -64,7 +64,7 @@ public class Queen extends Piece {
 			}
 			
 			for (int i=greater-1; lesser<i; i--) {
-				if (!ChessEngine.Board[fromRank][i].empty) {
+				if (!myBoard.pieces[fromRank][i].empty) {
 					return false;
 				}
 			}
@@ -77,7 +77,7 @@ public class Queen extends Piece {
 			}
 			
 			for (int i=greater-1; lesser<i; i--) {
-				if (!ChessEngine.Board[i][fromFile].empty) {
+				if (!myBoard.pieces[i][fromFile].empty) {
 					return false;
 				}
 			}

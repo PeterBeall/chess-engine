@@ -1,6 +1,6 @@
 public class Bishop extends Piece {
-	public Bishop(boolean white) {
-		super(white, "B");
+	public Bishop(boolean white, Board board) {
+		super(white, "B", board);
 	}
 	
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {
@@ -27,13 +27,13 @@ public class Bishop extends Piece {
 		for (int i=greaterFile-1; lesserFile<i; i--) {
 			if ((fromFile==greaterFile && fromRank==greaterRank) || (fromFile==lesserFile && fromRank==lesserRank)) {
 				for (int j=greaterRank-1; lesserRank<j; j--) {
-					if (!ChessEngine.Board[i][j].empty) {
+					if (!myBoard.pieces[i][j].empty) {
 						return false;
 					}
 				}
 			}else {
 				for (int j=lesserRank+1; greaterRank>j; j++) {
-					if (!ChessEngine.Board[i][j].empty) {
+					if (!myBoard.pieces[i][j].empty) {
 						return false;
 					}
 				}
