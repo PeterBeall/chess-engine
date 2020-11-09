@@ -1,3 +1,3 @@
 This is a simple chess program I'm working on. I will make a chess board on which pieces can be moved only legally. After that, I might make a chess computer which the user can play against. 
 
-Currently, you move pieces by entering the coordinates of the piece you want to move, then entering the coordinates of the position you want to move it to. Enter one number at a time. For the files, enter 1 for a, 2 for b, etc. For example, to move the e2 pawn to e3, enter 5, then 2, then 5, then 3.
+Currently, you move pieces by entering the coordinates of the piece you want to move, then entering the coordinates of the position you want to move it to. Enter one coordinate at a time. For example, to move the e2 pawn to e4, enter e, then 2, then e, then 4.
