@@ -3,17 +3,32 @@ import java.util.ArrayList;
 
 class ChessEngine {
 	public static void main(String[] args) {
-		//A Board object will store the pieces in their positions. Board.pieces[i][j] is the piece in rank i+1 and file j+1.
+		//create pieces for the board:
 		Board TheBoard = new Board();
+		Pawn BlackPawn = new Pawn(false, TheBoard);
+		Pawn WhitePawn = new Pawn(true, TheBoard);
+		Knight BlackKnight = new Knight(false, TheBoard);
+		Knight WhiteKnight = new Knight(true, TheBoard);
+		Bishop BlackBishop = new Bishop(false, TheBoard);
+		Bishop WhiteBishop = new Bishop(true, TheBoard);
+		Rook BlackRook = new Rook(false, TheBoard);
+		Rook WhiteRook = new Rook(true, TheBoard);
+		Queen BlackQueen = new Queen(false, TheBoard);
+		Queen WhiteQueen = new Queen(true, TheBoard);
+		King BlackKing = new King(false, TheBoard);
+		King WhiteKing = new King(true, TheBoard);
+		NoPiece EmptyPiece = new NoPiece(TheBoard);
+		
+		//A Board object will store the pieces in their positions. Board.pieces[i][j] is the piece in rank i+1 and file j+1.
 		TheBoard.setPieces(new Piece[][] {
-			{new Rook(true, TheBoard), new Knight(true, TheBoard), new Bishop(true, TheBoard), new Queen(true, TheBoard), new King(true, TheBoard), new Bishop(true, TheBoard), new Knight(true, TheBoard), new Rook(true, TheBoard)},
-			{new Pawn(true, TheBoard), new Pawn(true, TheBoard), new Pawn(true, TheBoard), new Pawn(true, TheBoard), new Pawn(true, TheBoard), new Pawn(true, TheBoard), new Pawn(true, TheBoard), new Pawn(true, TheBoard)},
-			{new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard)},
-			{new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard)},
-			{new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard)},
-			{new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard), new NoPiece(TheBoard)},
-			{new Pawn(false, TheBoard), new Pawn(false, TheBoard), new Pawn(false, TheBoard), new Pawn(false, TheBoard), new Pawn(false, TheBoard), new Pawn(false, TheBoard), new Pawn(false, TheBoard), new Pawn(false, TheBoard)},
-			{new Rook(false, TheBoard), new Knight(false, TheBoard), new Bishop(false, TheBoard), new Queen(false, TheBoard), new King(false, TheBoard), new Bishop(false, TheBoard), new Knight(false, TheBoard), new Rook(false, TheBoard)}});
+			{WhiteRook, WhiteKnight, WhiteBishop, WhiteQueen, WhiteKing, WhiteBishop, WhiteKnight, WhiteRook},
+			{WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn},
+			{EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece},
+			{EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece},
+			{EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece},
+			{EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece, EmptyPiece},
+			{BlackPawn, BlackPawn, BlackPawn, BlackPawn, BlackPawn, BlackPawn, BlackPawn, BlackPawn},
+			{BlackRook, BlackKnight, BlackBishop, BlackQueen, BlackKing, BlackBishop, BlackKnight, BlackRook}});
 		
 		PrintBoard(TheBoard);
 		
@@ -43,9 +58,12 @@ class ChessEngine {
 				toFile = scanner.next().charAt(0)-97;
 				toRank = scanner.nextInt()-1;
 				
+				System.out.println(WhitePawn.isLegalMove(1,4,3,4));
+				System.out.println(TheBoard.pieces[fromRank][fromFile]);
+				System.out.println(TheBoard.pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile));
 				//retry if move is illegal
 			} while (!(((TheBoard.move % 2 == 0) == TheBoard.pieces[fromRank][fromFile].isWhite) && !(TheBoard.pieces[fromRank][fromFile].empty) && ((TheBoard.pieces[toRank][toFile].empty) || (TheBoard.pieces[fromRank][fromFile].isWhite != TheBoard.pieces[toRank][toFile].isWhite)) && TheBoard.pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile) && 0 <= fromRank && fromRank < 8 && 0 <= fromFile && fromFile < 8));
-			
+			System.out.println("aaaa");
 			TheBoard.movePiece(fromRank, fromFile, toRank, toFile);
 			
 			PrintBoard(TheBoard);

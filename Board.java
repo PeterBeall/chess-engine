@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Board {
 	public Piece[][] pieces;
 	public int move = 0;
-	//public int lastMoveDoublePawnFile
 	
 	//contructor with no paramaters makes empty 8x8 board:
 	public Board() {
@@ -16,10 +15,28 @@ public class Board {
 		}
 	}
 	
+	//contructor with pieces and coordinates puts them on an empty 8x8 board:
+	public Board(CoordinatePiece[] toAddPieces) {
+		pieces = new Piece[8][8];
+		//create empty board:
+		for (int i=0; i<pieces.length; i++) {
+			for (int j=0; j<pieces[i].length; j++) {
+				pieces[i][j] = new NoPiece(this);
+			}
+		}
+		
+		//put given pieces onto the board:
+		for (int i=0; i<toAddPieces.length; i++) {
+			pieces[toAddPieces[i].pos.rank][toAddPieces[i].pos.file] = toAddPieces[i].piece;
+		}
+	}
+	
 	//constructor using given piece arrangement:
 	public Board(Piece[][] pieces) {
 		this.pieces = pieces;
 	}
+	
+	//set the piece arrangement to a given one:
 	public void setPieces(Piece[][] pieces) {
 		this.pieces = pieces;
 	}

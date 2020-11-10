@@ -12,6 +12,10 @@ public class Piece {
 		this.isWhite = white;
 		this.myBoard = board;
 	}
+	public Piece(boolean white, String letter) {
+		this.letter = letter;
+		this.isWhite = white;
+	}
 	public Piece(String letter, Board board) {
 		this.letter = letter;
 		this.empty = true;
