@@ -24,5 +24,5 @@ public class Piece {
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {return false;};
 	
 	//given coordinates of a possible move, returns a list containing a coordinates and a pieces to set the coordinates to.
-	public ArrayList<Object> getResultingSpecialSet(int fromRank, int fromFile, int toRank, int toFile) {return new ArrayList<Object>();}
+	public CoordinatePiece[] getResultingSpecialSet(int fromRank, int fromFile, int toRank, int toFile) {return new CoordinatePiece[0];}
 }

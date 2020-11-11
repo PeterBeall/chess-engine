@@ -9,7 +9,7 @@ public class Rook extends Piece {
 			return false;
 		}
 		
-		//But, there can't be any pieces in the way:
+		//There can't be any pieces in the way, so we check all the squares in between:
 		int greater;
 		int lesser;
 		if (fromRank == toRank) {
@@ -40,17 +40,6 @@ public class Rook extends Piece {
 				}
 			}
 		}
-		
-		/*for (int i=fromRank-toRank+Integer.signum(fromRank-toRank); Math.abs(i)>0; i+=Integer.signum(toRank-fromRank)) {
-			if (!ChessEngine.Board[i][fromFile].empty) {
-				return false;
-			}
-		}
-		for (int i=fromFile-toFile+Integer.signum(fromFile-toFile); Math.abs(i)>0; i+=Integer.signum(toFile-fromFile)) {
-			if (!ChessEngine.Board[fromRank][i].empty) {
-				return false;
-			}
-		}*/
 		
 		return true;
 	}

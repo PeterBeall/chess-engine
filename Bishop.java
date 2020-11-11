@@ -9,7 +9,7 @@ public class Bishop extends Piece {
 			return false;
 		}
 		
-		//But, there can't be any pieces in the way:
+		//But, there can't be any pieces in the way, so we check all the squares in between:
 		int greaterRank = fromRank;
 		int lesserRank = toRank;
 		if (fromRank < toRank) {

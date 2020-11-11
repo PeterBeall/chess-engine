@@ -37,6 +37,7 @@ class ChessEngine {
 		
 		//move pieces:
 		while (true) {//later i'll replace 'true' with a condition of nobody being in checkmate or stalemate
+			//fromRank,fromFile will be the coordinates of the piece to be moved. toRank,toFile is where to move it to.
 			int fromFile;
 			int fromRank;
 			int toFile;
@@ -47,7 +48,7 @@ class ChessEngine {
 				if (TheBoard.move % 2 == 0) {
 					System.out.print("White's turn. ");
 				}else {
-					System.out.println("Black's turn.");
+					System.out.print("Black's turn.");
 				}
 				System.out.println("Enter the file (a-h) and rank (1-8) of the piece to move and the position to move to.");
 				
@@ -56,25 +57,39 @@ class ChessEngine {
 				toFile = scanner.next().charAt(0)-97;
 				toRank = scanner.nextInt()-1;
 				
-				//retry if move is illegal
-			} while (!(((TheBoard.move % 2 == 0) == (Color.WHITE == TheBoard.pieces[fromRank][fromFile].color)) && TheBoard.pieces[fromRank][fromFile].color != Color.NONE && (TheBoard.pieces[fromRank][fromFile].color != TheBoard.pieces[toRank][toFile].color) && TheBoard.pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile) && 0 <= fromRank && fromRank < 8 && 0 <= fromFile && fromFile < 8));
-			
-			TheBoard.movePiece(fromRank, fromFile, toRank, toFile);
+				//retry until the move given is legal
+			} while (!TheBoard.movePiece(fromRank, fromFile, toRank, toFile));
 			
 			PrintBoard(TheBoard);
 		}
 	}
 	
+	//print board to the terminal:
 	public static void PrintBoard(Board board) {
-		/*I want to focus on chess rather than graphics, so I'll just print text to display the game.
-		I'll use parentheses for white pieces and curly brackets for black pieces, and square brackets for empty squares.*/
+		//I'll use parentheses for white pieces and curly brackets for black pieces, and square brackets for empty squares.
 		
-		//Print rows of pieces with labels. Since the first things to be printed are at the top, I'll go backwards so White can be at the bottom:
-		System.out.println("r\\f a  b  c  d  e  f  g  h ");
-		for (int i=board.pieces.length-1; i>=0; i--) {
+		//Print rows of pieces with labels. I'll orient the board based on whoevers turn it is.
+		if (board.move % 2 == 0) {
+			System.out.println("r\\f a  b  c  d  e  f  g  h ");
+		}else {
+			System.out.println("r\\f h  g  f  e  d  c  b  a ");
+		}
+		for (int iPrime=board.pieces.length-1; iPrime>=0; iPrime--) {
+			int i = iPrime;
+			//flip the board if its black's turn:
+			if (board.move % 2 == 1) {
+				i = board.pieces.length-1 - iPrime;
+			}
+			
 			String rankText = (i+1) + "| ";
 			
-			for (int j=0; j<board.pieces[i].length; j++) {
+			for (int jPrime=0; jPrime<board.pieces[i].length; jPrime++) {
+				int j = jPrime;
+				//flip the board if its black's turn:
+				if (board.move % 2 == 1) {
+					j = board.pieces[i].length-1 - jPrime;
+				}
+				
 				String pieceText = board.pieces[i][j].letter;
 				
 				if (board.pieces[i][j].color == Color.NONE) {

@@ -2,9 +2,9 @@ import java.util.ArrayList;
 
 public class Board {
 	public Piece[][] pieces;
-	public int move = 0;
+	public int move = 0;//this increases by 1 every move. So, it is white's turn if and only if this is even.
 	
-	//contructor with no paramaters makes empty 8x8 board:
+	//empty 8x8 board:
 	public Board() {
 		pieces = new Piece[8][8];
 		
@@ -18,7 +18,7 @@ public class Board {
 		}
 	}
 	
-	//contructor with pieces and coordinates puts them on an empty 8x8 board:
+	//place given pieces on an empty 8x8 board:
 	public Board(CoordinatePiece[] toAddPieces) {
 		pieces = new Piece[8][8];
 		//create empty board:
@@ -34,33 +34,38 @@ public class Board {
 		}
 	}
 	
-	//constructor using given piece arrangement:
+	//use given piece arrangement:
 	public Board(Piece[][] pieces) {
 		this.pieces = pieces;
 	}
 	
-	//set the piece arrangement to a given one:
+	//set the piece arrangement:
 	public void setPieces(Piece[][] pieces) {
 		this.pieces = pieces;
 	}
 	
 	//set a given coordinate to have the given pieece:
-	public boolean setPiece(int r, int f, Piece piece) {
-		//we should only do this on coordinates that are on the board:
-		if (0 <= r && r < pieces.length && 0 <= f && f < pieces[0].length) {
-			pieces[r][f] = piece;
-			return true;
-		}
-		return false;
+	public void setPiece(int r, int f, Piece piece) {
+		pieces[r][f] = piece;
+	}
+	public void setPiece(CoordinatePiece coordinatePiece) {
+		setPiece(coordinatePiece.pos.rank, coordinatePiece.pos.file, coordinatePiece.piece);
 	}
 	
+	//if the given move is legal, move the piece and return true, otherwise return false.
 	public boolean movePiece(int fromRank, int fromFile, int toRank, int toFile) {
-		if (pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile)) {
-			//if the move involves, castling, en passant, etc, then some coordinates to be set to pieces will be in this list:
-			ArrayList<Object> special = pieces[fromRank][fromFile].getResultingSpecialSet(fromRank, fromFile, toRank, toFile);
-			
-			for (int i=0; i<special.size()-2; i+=3) {
-				setPiece((int)special.get(i), (int)special.get(i+1), (Piece)special.get(i+2));
+		/*To be legal, all these must be true:
+			-moving a piece of the color whose turn it is
+			-not moving an empty piece
+			-not capturing a piece of the same color
+			-moving as the piece should; determined by .isLegalMove()
+			-moving to a coordinate that is off the board
+		*/
+		if ((((move % 2 == 0) == (Color.WHITE == pieces[fromRank][fromFile].color)) && pieces[fromRank][fromFile].color != Color.NONE && (pieces[fromRank][fromFile].color != pieces[toRank][toFile].color) && pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile) && 0 <= fromRank && fromRank < pieces.length && 0 <= fromFile && fromFile < pieces[0].length)) {
+			//if the move involves, castling, en passant, etc, then coordinates and pieces to set those coordinates to will be in this list:
+			CoordinatePiece[] special = pieces[fromRank][fromFile].getResultingSpecialSet(fromRank, fromFile, toRank, toFile);
+			for (int i=0; i<special.length; i++) {
+				setPiece(special[i]);
 			}
 			
 			//move the main piece thats being moved:
@@ -71,6 +76,7 @@ public class Board {
 			
 			return true;
 		}
+		
 		//move illegal, do nothing:
 		return false;
 	}
