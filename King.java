@@ -1,6 +1,6 @@
 public class King extends Piece {
-	public King(boolean white, Board board) {
-		super(white, "K", board);
+	public King(Color color, Board board) {
+		super(color, "K", board);
 	}
 	
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {

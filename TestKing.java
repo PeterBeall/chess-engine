@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 
 public class TestKing {
 	Board testBoard = new Board();
-	King testKing = new King(true, testBoard);
+	King testKing = new King(Color.WHITE, testBoard);
 	
 	//I test this mostly by placing one on a board and verifying that the legality of going to a certain square is correct.
 	

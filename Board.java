@@ -7,10 +7,13 @@ public class Board {
 	//contructor with no paramaters makes empty 8x8 board:
 	public Board() {
 		pieces = new Piece[8][8];
+		
+		NoPiece emptySquare = new NoPiece(this);
+		
 		//fill board with empty spots:
 		for (int i=0; i<pieces.length; i++) {
 			for (int j=0; j<pieces[i].length; j++) {
-				pieces[i][j] = new NoPiece(this);
+				pieces[i][j] = emptySquare;
 			}
 		}
 	}

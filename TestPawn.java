@@ -3,8 +3,8 @@ import static org.junit.Assert.*;
 
 public class TestPawn {
 	Board testBoard = new Board();
-	Pawn testWhitePawn = new Pawn(true, testBoard);
-	Pawn testBlackPawn = new Pawn(false, testBoard);//pawns of opposite color are supposed to move in opposite directions,so I should test both
+	Pawn testWhitePawn = new Pawn(Color.WHITE, testBoard);
+	Pawn testBlackPawn = new Pawn(Color.BLACK, testBoard);//pawns of opposite color are supposed to move in opposite directions,so I should test both
 	
 	//I test this mostly by placing one on a board and verifying that the legality of going to a certain square is correct.
 	

@@ -1,6 +1,6 @@
 public class Bishop extends Piece {
-	public Bishop(boolean white, Board board) {
-		super(white, "B", board);
+	public Bishop(Color color, Board board) {
+		super(color, "B", board);
 	}
 	
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {
@@ -24,22 +24,25 @@ public class Bishop extends Piece {
 			lesserFile = fromFile;
 		}
 		
-		for (int i=greaterFile-1; lesserFile<i; i--) {
-			if ((fromFile==greaterFile && fromRank==greaterRank) || (fromFile==lesserFile && fromRank==lesserRank)) {
-				for (int j=greaterRank-1; lesserRank<j; j--) {
-					if (!myBoard.pieces[i][j].empty) {
-						return false;
-					}
-				}
-			}else {
-				for (int j=lesserRank+1; greaterRank>j; j++) {
-					if (!myBoard.pieces[i][j].empty) {
-						return false;
-					}
-				}
-			}
+		boolean fromGreaterOrLesser = (fromFile==greaterFile && fromRank==greaterRank) || (fromFile==lesserFile && fromRank==lesserRank);
+		
+		int rankInc = -1;
+		if (!fromGreaterOrLesser) {
+			rankInc = 1;
 		}
+		int j = greaterRank+rankInc;
+		if (!fromGreaterOrLesser) {
+			j = lesserRank+rankInc;
+		}
+		
+		for (int i=greaterFile-1; lesserFile<i; i--) {
+			if (myBoard.pieces[j][i].color != Color.NONE) {
+				return false;
+			}
 			
+			j += rankInc;
+		}
+		
 		return true;
 	}
 }

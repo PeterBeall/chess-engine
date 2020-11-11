@@ -2,23 +2,22 @@ import java.util.ArrayList;
 
 public class Piece {
 	public String letter;
-	public boolean isWhite;
-	public boolean empty = false;
+	public Color color;
 	public Board myBoard;
 	public int lastMoveSpecialMove = -1;
 	
-	public Piece(boolean white, String letter, Board board) {
+	public Piece(Color color, String letter, Board board) {
 		this.letter = letter;
-		this.isWhite = white;
+		this.color = color;
 		this.myBoard = board;
 	}
-	public Piece(boolean white, String letter) {
+	public Piece(Color color, String letter) {
 		this.letter = letter;
-		this.isWhite = white;
+		this.color = color;
 	}
 	public Piece(String letter, Board board) {
 		this.letter = letter;
-		this.empty = true;
+		this.color = Color.NONE;
 		this.myBoard = board;
 	}
 	

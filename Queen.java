@@ -1,13 +1,13 @@
 public class Queen extends Piece {
-	//I'll build on these to determine the Queen's legal moves:
+	//I'll just build on these to determine the Queen's legal moves:
 	Bishop bishop;
 	Rook rook;
 	
-	public Queen(boolean white, Board board) {
-		super(white, "Q", board);
+	public Queen(Color color, Board board) {
+		super(color, "Q", board);
 		
-		bishop = new Bishop(white, board);
-		rook = new Rook(white, board);
+		bishop = new Bishop(color, board);
+		rook = new Rook(color, board);
 	}
 	
 	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {

@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 
 public class TestRook {
 	Board testBoard = new Board();
-	Rook testRook = new Rook(true, testBoard);
+	Rook testRook = new Rook(Color.WHITE, testBoard);
 	
 	//I test this mostly by placing one on a board and verifying that the legality of going to a certain square is correct.
 	

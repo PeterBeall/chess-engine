@@ -5,18 +5,18 @@ class ChessEngine {
 	public static void main(String[] args) {
 		//create pieces for the board:
 		Board TheBoard = new Board();
-		Pawn BlackPawn = new Pawn(false, TheBoard);
-		Pawn WhitePawn = new Pawn(true, TheBoard);
-		Knight BlackKnight = new Knight(false, TheBoard);
-		Knight WhiteKnight = new Knight(true, TheBoard);
-		Bishop BlackBishop = new Bishop(false, TheBoard);
-		Bishop WhiteBishop = new Bishop(true, TheBoard);
-		Rook BlackRook = new Rook(false, TheBoard);
-		Rook WhiteRook = new Rook(true, TheBoard);
-		Queen BlackQueen = new Queen(false, TheBoard);
-		Queen WhiteQueen = new Queen(true, TheBoard);
-		King BlackKing = new King(false, TheBoard);
-		King WhiteKing = new King(true, TheBoard);
+		Pawn BlackPawn = new Pawn(Color.BLACK, TheBoard);
+		Pawn WhitePawn = new Pawn(Color.WHITE, TheBoard);
+		Knight BlackKnight = new Knight(Color.BLACK, TheBoard);
+		Knight WhiteKnight = new Knight(Color.WHITE, TheBoard);
+		Bishop BlackBishop = new Bishop(Color.BLACK, TheBoard);
+		Bishop WhiteBishop = new Bishop(Color.WHITE, TheBoard);
+		Rook BlackRook = new Rook(Color.BLACK, TheBoard);
+		Rook WhiteRook = new Rook(Color.WHITE, TheBoard);
+		Queen BlackQueen = new Queen(Color.BLACK, TheBoard);
+		Queen WhiteQueen = new Queen(Color.WHITE, TheBoard);
+		King BlackKing = new King(Color.BLACK, TheBoard);
+		King WhiteKing = new King(Color.WHITE, TheBoard);
 		NoPiece EmptyPiece = new NoPiece(TheBoard);
 		
 		//A Board object will store the pieces in their positions. Board.pieces[i][j] is the piece in rank i+1 and file j+1.
@@ -34,8 +34,6 @@ class ChessEngine {
 		
 		//i'll use the terminal to enter moves:
 		Scanner scanner = new Scanner(System.in);
-		
-		//boolean whitesTurn = true;
 		
 		//move pieces:
 		while (true) {//later i'll replace 'true' with a condition of nobody being in checkmate or stalemate
@@ -58,17 +56,12 @@ class ChessEngine {
 				toFile = scanner.next().charAt(0)-97;
 				toRank = scanner.nextInt()-1;
 				
-				System.out.println(WhitePawn.isLegalMove(1,4,3,4));
-				System.out.println(TheBoard.pieces[fromRank][fromFile]);
-				System.out.println(TheBoard.pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile));
 				//retry if move is illegal
-			} while (!(((TheBoard.move % 2 == 0) == TheBoard.pieces[fromRank][fromFile].isWhite) && !(TheBoard.pieces[fromRank][fromFile].empty) && ((TheBoard.pieces[toRank][toFile].empty) || (TheBoard.pieces[fromRank][fromFile].isWhite != TheBoard.pieces[toRank][toFile].isWhite)) && TheBoard.pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile) && 0 <= fromRank && fromRank < 8 && 0 <= fromFile && fromFile < 8));
-			System.out.println("aaaa");
+			} while (!(((TheBoard.move % 2 == 0) == (Color.WHITE == TheBoard.pieces[fromRank][fromFile].color)) && TheBoard.pieces[fromRank][fromFile].color != Color.NONE && (TheBoard.pieces[fromRank][fromFile].color != TheBoard.pieces[toRank][toFile].color) && TheBoard.pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile) && 0 <= fromRank && fromRank < 8 && 0 <= fromFile && fromFile < 8));
+			
 			TheBoard.movePiece(fromRank, fromFile, toRank, toFile);
 			
 			PrintBoard(TheBoard);
-			
-			//whitesTurn = !whitesTurn;
 		}
 	}
 	
@@ -84,9 +77,9 @@ class ChessEngine {
 			for (int j=0; j<board.pieces[i].length; j++) {
 				String pieceText = board.pieces[i][j].letter;
 				
-				if (board.pieces[i][j].empty) {
+				if (board.pieces[i][j].color == Color.NONE) {
 					pieceText = "[" + pieceText + "]";
-				}else if (board.pieces[i][j].isWhite) {
+				}else if (board.pieces[i][j].color == Color.WHITE) {
 					pieceText = "(" + pieceText + ")";
 				}else {
 					pieceText = "{" + pieceText + "}";
