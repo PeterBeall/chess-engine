@@ -21,8 +21,7 @@ public class Rook extends Piece {
 			}
 			
 			for (int i=greater-1; lesser<i; i--) {
-				System.out.println(i + "," + fromRank + "," + (myBoard.pieces[i][fromRank].color != Color.NONE));
-				if (myBoard.pieces[fromRank][i].color != Color.NONE) {
+				if (board.pieces[fromRank][i].color != Color.NONE) {
 					return false;
 				}
 			}
@@ -35,12 +34,16 @@ public class Rook extends Piece {
 			}
 			
 			for (int i=greater-1; lesser<i; i--) {
-				if (myBoard.pieces[i][fromFile].color != Color.NONE) {
+				if (board.pieces[i][fromFile].color != Color.NONE) {
 					return false;
 				}
 			}
 		}
 		
 		return true;
+	}
+	
+	public Rook copy(Board newBoard) {
+		return new Rook(color, newBoard);
 	}
 }

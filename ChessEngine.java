@@ -36,7 +36,7 @@ class ChessEngine {
 		Scanner scanner = new Scanner(System.in);
 		
 		//move pieces:
-		while (true) {//later i'll replace 'true' with a condition of nobody being in checkmate or stalemate
+		while (!TheBoard.isGameOver()) {
 			//fromRank,fromFile will be the coordinates of the piece to be moved. toRank,toFile is where to move it to.
 			int fromFile;
 			int fromRank;
@@ -52,16 +52,20 @@ class ChessEngine {
 				}
 				System.out.println("Enter the file (a-h) and rank (1-8) of the piece to move and the position to move to.");
 				
-				fromFile = scanner.next().charAt(0)-97;//'a'->0, 'b'->1, etc, since everywhere else files are integers.
-				fromRank = scanner.nextInt()-1;
-				toFile = scanner.next().charAt(0)-97;
-				toRank = scanner.nextInt()-1;
+				String enteredMove = scanner.next();
 				
+				fromFile = enteredMove.charAt(0)-97;//'a'->0, 'b'->1, etc, since everywhere else files are integers.
+				fromRank = enteredMove.charAt(1)-49;
+				toFile = enteredMove.charAt(2)-97;
+				toRank = enteredMove.charAt(3)-49;
+								
 				//retry until the move given is legal
 			} while (!TheBoard.movePiece(fromRank, fromFile, toRank, toFile));
 			
 			PrintBoard(TheBoard);
 		}
+		
+		System.out.println("Game over");
 	}
 	
 	//print board to the terminal:

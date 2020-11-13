@@ -8,6 +8,9 @@ public class TestRunner {
 		
 		for (Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
+			System.out.println(failure.getTrace().split("\n")[0]);
+			System.out.println(failure.getTrace().split("\n")[1]);
+			System.out.println(failure.getTrace().split("\n")[2]);
 		}
 		
 	System.out.println(result.wasSuccessful());

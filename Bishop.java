@@ -36,7 +36,7 @@ public class Bishop extends Piece {
 		}
 		
 		for (int i=greaterFile-1; lesserFile<i; i--) {
-			if (myBoard.pieces[j][i].color != Color.NONE) {
+			if (board.pieces[j][i].color != Color.NONE) {
 				return false;
 			}
 			
@@ -44,5 +44,9 @@ public class Bishop extends Piece {
 		}
 		
 		return true;
+	}
+	
+	public Bishop copy(Board newBoard) {
+		return new Bishop(color, newBoard);
 	}
 }

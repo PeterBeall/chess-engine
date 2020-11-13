@@ -14,4 +14,8 @@ public class Queen extends Piece {
 		//the Queen can move like a bishop, or like a rook:
 		return bishop.isLegalMove(fromRank, fromFile, toRank, toFile) || rook.isLegalMove(fromRank, fromFile, toRank, toFile);
 	}
+	
+	public Queen copy(Board newBoard) {
+		return new Queen(color, newBoard);
+	}
 }

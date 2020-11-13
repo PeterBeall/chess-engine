@@ -7,4 +7,8 @@ public class Knight extends Piece {
 		//This simply moves 2 squares in one direction and 1 square in another.
 		return (Math.abs(fromRank-toRank)==1 && Math.abs(fromFile-toFile)==2) || (Math.abs(fromRank-toRank)==2 && Math.abs(fromFile-toFile)==1);
 	}
+	
+	public Knight copy(Board newBoard) {
+		return new Knight(color, newBoard);
+	}
 }
