@@ -1,82 +1,91 @@
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class King extends Piece {
+	public King(Color color, Board board, IntPair pos) {
+		super(color, "K", board, pos);
+	}
+	public King(Color color, Board board, int rank, int file) {
+		super(color, "K", board, rank, file);
+	}
+	
 	public King(Color color, Board board) {
 		super(color, "K", board);
 	}
 	
-	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {
+	public boolean isLegalMove(int rank, int file) {
 		//This simply moves 1 square in one direction and 0 or 1 square in another.
-		return (Math.abs(fromRank-toRank)==1 && Math.abs(fromFile-toFile)<2) || (Math.abs(fromFile-toFile)==1 && Math.abs(fromRank-toRank)<2);
+		return (Math.abs(pos.rank-rank)==1 && Math.abs(pos.file-file)<2) || (Math.abs(pos.file-file)==1 && Math.abs(pos.rank-rank)<2);
+	}
+	public boolean isLegalMove(IntPair to) {
+		return isLegalMove(to.rank, to.file);
 	}
 	
-	//if this king is located at (rank, file), return whether it is in check (or possibly checkmate)
-	public boolean isInCheck(int rank, int file) {
-		//its in check if its on an unnsafe square:
-		return !getSafeSquares(rank, file)[1][1];
-	}
-	
-	//if this king is located at (rank, file), return whether it is in stalemate
-	public boolean isInStalemate(int rank, int file) {
-		//it could be in stalemate only if its safe but has no other safe squares:
-		if (Arrays.deepEquals(getSafeSquares(rank, file), new boolean[][]{{false, false, false},
-			{false, true, false},
-			{false, false, false}})) {
-			//stalemate if no friendly piece can move:
-			for (int i=0; i<board.pieces.length; i++) {
-				for (int j=0; j<board.pieces[i].length; j++) {
-					if (board.pieces[i][j].color == color && board.pieces[i][j] != this) {
-						for (int m=0; m<board.pieces.length; m++) {
-							for (int n=0; n<board.pieces[m].length; n++) {
-								if (board.pieces[i][j].isLegalMove(i, j, m, n)) {
-									return false;
-								}
-							}
-						}
+	//return whether it is in check (or possibly checkmate)
+	public boolean isInCheck() {
+		//check if the king is being attacked by at least one enemy piece:
+		for (Piece piece : board.pieces) {
+			//only consider enemy pieces:
+			if (piece.color != color) {
+				for (IntPair move : piece.getLegalMoves()) {
+					if (move.rank == pos.rank && move.file == pos.file) {
+						return true;
 					}
 				}
 			}
-			
-			return true;
 		}
 		
 		return false;
 	}
 	
-	//if this king is located at (rank, file), return whether it is in checkmate
-	public boolean isInCheckmate(int rank, int file) {
-		//it could be in checkmate only if its safe but has no other safe squares:
-		if (Arrays.deepEquals(getSafeSquares(rank, file), new boolean[][]{{false, false, false},
-			{false, false, false},
-			{false, false, false}})) {
-			//checkmate if no friendly piece can save it:
-			for (int i=0; i<board.pieces.length; i++) {
-				for (int j=0; j<board.pieces[i].length; j++) {
-					if (board.pieces[i][j].color == color && board.pieces[i][j] != this) {
-						for (int m=0; m<board.pieces.length; m++) {
-							for (int n=0; n<board.pieces[m].length; n++) {
-								if (board.pieces[i][j] != this && board.pieces[m][n] != this && board.pieces[i][j].isLegalMove(i, j, m, n)) {
-									//System.out.println(i+","+j+","+m+","+n+","+(board.pieces[i][j] != this)+","+board.pieces[i][j].letter);
-									
-									CoordinatePiece hypotheticalKing = board.getHypotheticalBoard(i, j, m, n).getKingOfMove(board.move);
-									if (!((King)hypotheticalKing.piece).isInCheck(hypotheticalKing.pos.rank, hypotheticalKing.pos.file)) {
-										return false;
-									}
-								}
-							}
-						}
+	//return whether it is in stalemate
+	public boolean isInStalemate() {
+		//if there does not exist a friendly piece with a move such that the king is not in check, and currently is not in check, then stalemate:
+		if (!isInCheck()) {
+			for (Piece piece : board.pieces) {
+				if (piece.color == color) {
+					for (IntPair move : piece.getLegalMoves()) {
+						Board hypotheticalBoard = board.getHypotheticalBoard(piece, move);
+						
+						if (!hypotheticalBoard.getKingOfMove(color==Color.WHITE ? 0 : 1).isInCheck()) {
+							return false;
+						} 
 					}
 				}
 			}
-			
-			return true;
+		}else {
+			return false;
 		}
 		
-		return false;
+		return true;
 	}
 	
+	//return whether it is in checkmate
+	public boolean isInCheckmate() {		
+		//if there does not exist a friendly piece with a move such that the king is not in check, then checkmate:
+		if (isInCheck()) {
+			for (Piece piece : board.pieces) {
+				if (piece.color == color) {
+					for (IntPair move : piece.getLegalMoves()) {
+						Board hypotheticalBoard = board.getHypotheticalBoard(piece, move);
+						
+						if (!hypotheticalBoard.getKingOfMove(color==Color.WHITE ? 0 : 1).isInCheck()) {
+							return false;
+						} 
+					}
+				}
+			}
+		}else {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/*
 	//returns a boolean array such that if getSafeSquares()[i][j] and the king is at (rank,file), then no enemy piece is attacking (rank+i-1,file+j-1) and it is possible to go there
-	private boolean[][] getSafeSquares(int rank, int file) {
+	private boolean[][] getSafeSquares() {
 		boolean[][] safeSquares = new boolean[][]{{true, true, true},
 			{true, true, true},
 			{true, true, true}};
@@ -84,21 +93,21 @@ public class King extends Piece {
 		//the king cannot move to a square that isn't on the board, or is occupied by a teammate;
 		for (int i=0; i<safeSquares.length; i++) {
 			for (int j=0; j< safeSquares[i].length; j++) {
-				if ((rank+i-1 >= board.pieces.length || file+j-1 >= board.pieces[0].length || rank+i-1 < 0 || file+j-1 < 0) || ((board.pieces[rank+i-1][file+j-1].color == color) && (board.pieces[rank+i-1][file+j-1] != this))) {
+				Piece pieceHere = board.getPieceAt(pos.rank+i-1, pos.file+j-1);
+				if ((!board.isPairOnBoard(pos.rank+i-1, pos.file+j-1)) || ((pieceHere != null && pieceHere.color == color) && (pieceHere != this))) {
 					safeSquares[i][j] = false;
 				}
 			}
 		}
 		
 		//the king cannot move to a square that is being attacked by at least one enemy piece:
-		for (int i=0; i<board.pieces.length; i++) {
-			for (int j=0; j<board.pieces[i].length; j++) {
-				//only consider enemy pieces:
-				if (board.pieces[i][j].color != Color.NONE && board.pieces[i][j].color != color) {
+		for (Piece piece : board.pieces) {
+			//only consider enemy pieces:
+			if (piece.color != color) {
+				for (IntPair move : piece.getLegalMoves()) {
 					for (int m=0; m<safeSquares.length; m++) {
 						for (int n=0; n<safeSquares[m].length; n++) {
-							//set safe square false if its being attacked:
-							if (safeSquares[m][n] && board.pieces[i][j].isLegalMove(i, j, rank+m-1, file+n-1)) {
+							if (move.rank == pos.rank+m-1 && move.file == pos.file+n-1) {
 								safeSquares[m][n] = false;
 							}
 						}
@@ -108,9 +117,23 @@ public class King extends Piece {
 		}
 		
 		return safeSquares;
+	}*/
+	
+	public ArrayList<IntPair> getLegalMoves() {
+		ArrayList<IntPair> legalMoves = new ArrayList<IntPair>();
+		
+		for(int i=0; i<3; i++) {
+			for (int j=0; j<3; j++) {
+				if (!(i == 1 && j == 1) && board.isPairOnBoard(pos.rank+i-1, pos.file+j-1)) {
+					legalMoves.add(new IntPair(pos.rank+i-1, pos.file+j-1));
+				}
+			}
+		}
+		
+		return legalMoves;
 	}
 	
 	public King copy(Board newBoard) {
-		return new King(color, newBoard);
+		return new King(color, newBoard, pos);
 	}
 }

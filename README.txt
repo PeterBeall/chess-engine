@@ -14,10 +14,10 @@ r\f a  b  c  d  e  f  g  h
 2| (_)(_)(_)(_)(_)(_)(_)(_)
 1| (R)(N)(B)(Q)(K)(B)(N)(R)
 
-You move pieces by entering the coordinates of the piece you want to move, then entering the coordinates of the position you want to move it to. Enter one coordinate at a time. For example, to move the e2 pawn to e4, enter e, then 2, then e, then 4.
+You move pieces by entering the coordinates of the piece you want to move and of the position you want to move it to, for a total of four characters. For example, to move the e2 pawn to e4, enter e2e4.
 
 To test, run TestRunner.java. This uses the JUnit package:
 
 https://github.com/downloads/junit-team/junit/junit-4.10.jar
 
-I dowloaded the jar into C:\JUNIT, then I set the environment variable %JUNIT_HOME% to C:\JUNIT and I set CLASSPATH to %CLASSPATH%;%JUNIT_HOME%\junit-4.10.jar;.;
+I dowloaded the jar into C:\JUNIT, and I set CLASSPATH to %CLASSPATH%;C:\JUNIT\junit-4.10.jar;.;

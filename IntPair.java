@@ -1,8 +1,8 @@
-public class CoordinatePair {
+public class IntPair {
 	public int rank;
 	public int file;
 	
-	public CoordinatePair(int r, int f) {
+	public IntPair(int r, int f) {
 		this.rank = r;
 		this.file = f;
 	}

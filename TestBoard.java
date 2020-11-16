@@ -1,33 +1,32 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.util.HashMap;
 
 public class TestBoard {
-	Board testBoard;
-	King testKing = new King(Color.WHITE, testBoard);
-	Knight testKnight = new Knight(Color.WHITE, testBoard);
-	Rook testEnemyRook = new Rook(Color.BLACK, testBoard);
+	Board testBoard = new Board();
 	
 	@Test
 	public void testBoard_Ng1f3() {//create a board with a knight, move the knight, and verify the new position
-		testBoard = new Board();
+		Knight testKnight = new Knight(Color.WHITE, testBoard, new IntPair(0, 6));
 		
+		testBoard.pieces.add(testKnight);
 		
-		testBoard.pieces[0][6] = testKnight;
+		testBoard.movePiece(testKnight, new IntPair(2, 5));
 		
-		testBoard.movePiece(0, 6, 2, 5);
-		
-		assertFalse(testBoard.pieces[0][6].equals(testKnight));
-		assertEquals(testBoard.pieces[2][5], testKnight);
+		assertNull(testBoard.getPieceAt(0, 6));
+		assertEquals(testBoard.getPieceAt(2, 5), testKnight);
 	}
 	
 	@Test
 	public void testBoard_moveIntoCheckIllegal() {
-		testBoard = new Board();
+		Knight testKnight = new Knight(Color.WHITE, testBoard, new IntPair(0, 6));
+		King testKing = new King(Color.WHITE, testBoard, new IntPair(0, 7));
+		Rook testEnemyRook = new Rook(Color.BLACK, testBoard, new IntPair(0, 0));
 		
-		testBoard.pieces[0][6] = testKnight;
-		testBoard.pieces[0][7] = testKing;
-		testBoard.pieces[0][0] = testEnemyRook;
+		testBoard.pieces.add(testKnight);
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testEnemyRook);
 		
-		assertFalse(testBoard.movePiece(0, 6, 2, 5));
+		assertFalse(testBoard.movePiece(testKnight, new IntPair(2, 5)));
 	}
 }

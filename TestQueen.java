@@ -3,29 +3,29 @@ import static org.junit.Assert.*;
 
 public class TestQueen {
 	Board testBoard = new Board();
-	Queen testQueen = new Queen(Color.WHITE, testBoard);
+	Queen testQueen = new Queen(Color.WHITE, testBoard, new IntPair(0, 3));
 	
 	//I test this mostly by placing one on a board and verifying that the legality of going to a certain square is correct.
 	
 	@Test
 	public void testQueen_d1g4_legal() {
-		testBoard.pieces[0][3] = testQueen;
+		testBoard.pieces.add(testQueen);
 		
-		assertTrue(testQueen.isLegalMove(0, 3, 3, 6));
+		assertTrue(testQueen.isLegalMove(3, 6));
 	}
 	
 	@Test
 	public void testQueen_d1g4_jump_illegal() {
-		testBoard.pieces[0][3] = testQueen;
-		testBoard.pieces[1][4] = testQueen;
+		testBoard.pieces.add(testQueen);
+		testBoard.pieces.add(new Queen(Color.WHITE, testBoard, new IntPair(1, 4)));
 		
-		assertFalse(testQueen.isLegalMove(0, 3, 3, 6));
+		assertFalse(testQueen.isLegalMove(3, 6));
 	}
 	
 	@Test
-	public void testQueen_d1d2_legal() {
-		testBoard.pieces[0][3] = testQueen;
+	public void testQueen_d1e3_illegal() {
+		testBoard.pieces.add(testQueen);
 		
-		assertTrue(testQueen.isLegalMove(0, 3, 1, 3));
+		assertFalse(testQueen.isLegalMove(2, 4));
 	}
 }

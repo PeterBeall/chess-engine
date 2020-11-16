@@ -1,11 +1,25 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Piece {
+abstract class Piece implements PieceInterface {
 	public String letter;
 	public Color color;
 	public Board board;
-	public int lastMoveSpecialMove = -1;
+	public int lastMoveSpecialMove = -2;
+	public IntPair pos;
 	
+	public Piece(Color color, String letter, Board board, IntPair pos) {
+		this.letter = letter;
+		this.color = color;
+		this.board = board;
+		this.pos = pos;
+	}
+	public Piece(Color color, String letter, Board board, int rank, int file) {
+		this.letter = letter;
+		this.color = color;
+		this.board = board;
+		this.pos = new IntPair(rank, file);
+	}
 	public Piece(Color color, String letter, Board board) {
 		this.letter = letter;
 		this.color = color;
@@ -15,17 +29,34 @@ public class Piece {
 		this.letter = letter;
 		this.color = color;
 	}
-	public Piece(String letter, Board board) {
-		this.letter = letter;
-		this.color = Color.NONE;
-		this.board = board;
+	
+	public HashMap<IntPair, Piece> getResultingSpecialSet(IntPair to) {return new HashMap<IntPair, Piece>();};
+	
+	//bishop, rook, and queen move similarly, so they'll all use this:
+	public ArrayList<IntPair> getBrqLegalMoves(IntPair[] directions) {
+		ArrayList<IntPair> legalMoves = new ArrayList<IntPair>();
+		
+		//look in each direction and add to the list of legal moves until an obstruction is reached:
+		for (IntPair i : directions) {
+			IntPair lookingAt = pos;
+			
+			do {
+				lookingAt = new IntPair(lookingAt.rank + i.rank, lookingAt.file + i.file);
+				
+				if (board.getPieceAt(lookingAt) != null) {
+					break;
+				}
+				
+				legalMoves.add(legalMoves.size(), lookingAt);
+			}while (board.isPairOnBoard(lookingAt));
+			
+			Piece capturing = board.getPieceAt(lookingAt);
+			
+			if (capturing == null || capturing.color != color) {
+				legalMoves.add(legalMoves.size(), lookingAt);
+			}
+		}
+		
+		return legalMoves;
 	}
-	
-	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {return false;};
-	
-	//given coordinates of a possible move, returns a list containing a coordinates and a pieces to set the coordinates to.
-	public CoordinatePiece[] getResultingSpecialSet(int fromRank, int fromFile, int toRank, int toFile) {return new CoordinatePiece[0];}
-	
-	//return a piece with the same properties:
-	public Piece copy(Board newBoard) {return new Piece(color, letter, newBoard);};
 }

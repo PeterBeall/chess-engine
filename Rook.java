@@ -1,49 +1,35 @@
+import java.util.ArrayList;
+
 public class Rook extends Piece {
+	public Rook(Color color, Board board, IntPair pos) {
+		super(color, "R", board, pos);
+	}
+	public Rook(Color color, Board board, int rank, int file) {
+		super(color, "R", board, rank, file);
+	}
+	
 	public Rook(Color color, Board board) {
 		super(color, "R", board);
 	}
 	
-	public boolean isLegalMove(int fromRank, int fromFile, int toRank, int toFile) {
-		//This moves like so; one of the coordinates changes and the other stays the same:
-		if ((fromRank == toRank && fromFile == toFile) || (fromRank != toRank && fromFile != toFile)) {
-			return false;
-		}
-		
-		//There can't be any pieces in the way, so we check all the squares in between:
-		int greater;
-		int lesser;
-		if (fromRank == toRank) {
-			greater = fromFile;
-			lesser = toFile;
-			if (fromFile < toFile) {
-				greater = toFile;
-				lesser = fromFile;
-			}
-			
-			for (int i=greater-1; lesser<i; i--) {
-				if (board.pieces[fromRank][i].color != Color.NONE) {
-					return false;
-				}
-			}
-		}else {
-			greater = fromRank;
-			lesser = toRank;
-			if (fromRank < toRank) {
-				greater = toRank;
-				lesser = fromRank;
-			}
-			
-			for (int i=greater-1; lesser<i; i--) {
-				if (board.pieces[i][fromFile].color != Color.NONE) {
-					return false;
-				}
+	public boolean isLegalMove(int rank, int file) {
+		for (IntPair move : getLegalMoves()) {
+			if (move.rank == rank && move.file == file) {
+				return true;
 			}
 		}
 		
-		return true;
+		return false;
+	}
+	public boolean isLegalMove(IntPair to) {
+		return isLegalMove(to.rank, to.file);
+	}
+	
+	public ArrayList<IntPair> getLegalMoves() {
+		return getBrqLegalMoves(new IntPair[]{new IntPair(1, 0), new IntPair(0, 1), new IntPair(-1, 0), new IntPair(0, -1)});
 	}
 	
 	public Rook copy(Board newBoard) {
-		return new Rook(color, newBoard);
+		return new Rook(color, newBoard, pos);
 	}
 }

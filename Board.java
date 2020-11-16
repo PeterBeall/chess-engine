@@ -1,59 +1,41 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Board {
-	public Piece[][] pieces;
+	public HashSet<Piece> pieces;
 	public int move = 0;//this increases by 1 every move. So, it is white's turn if and only if this is even.
 	
-	//8x8 board with kings:
+	//empty board:
 	public Board() {
-		pieces = new Piece[8][8];
-		
-		NoPiece emptySquare = new NoPiece(this);
-		
-		//fill board with empty spots:
-		for (int i=0; i<pieces.length; i++) {
-			for (int j=0; j<pieces[i].length; j++) {
-				pieces[i][j] = emptySquare;
-			}
-		}
+		pieces = new HashSet<Piece>();
 	}
 	
-	//place given pieces on an empty 8x8 board:
-	public Board(CoordinatePiece[] toAddPieces) {
-		pieces = new Piece[8][8];
-		//create empty board:
-		for (int i=0; i<pieces.length; i++) {
-			for (int j=0; j<pieces[i].length; j++) {
-				pieces[i][j] = new NoPiece(this);
-			}
-		}
-		
-		//put given pieces onto the board:
-		for (int i=0; i<toAddPieces.length; i++) {
-			pieces[toAddPieces[i].pos.rank][toAddPieces[i].pos.file] = toAddPieces[i].piece;
-		}
-	}
-	
-	//use given piece arrangement:
-	public Board(Piece[][] pieces) {
+	//use given pieces:
+	public Board(HashSet<Piece> pieces) {
 		this.pieces = pieces;
 	}
 	
-	//set the piece arrangement:
+	//set the pieces:
+	public void setPieces(HashSet<Piece> pieces) {
+		this.pieces = pieces;
+	}
 	public void setPieces(Piece[][] pieces) {
-		this.pieces = pieces;
+		HashSet<Piece> setOfPieces = new HashSet<Piece>();
+		
+		for (int i=0; i<pieces.length; i++) {
+			for (int j=0; j<pieces[i].length; j++) {
+				pieces[i][j].pos = new IntPair(i, j);
+				setOfPieces.add(pieces[i][j]);
+			}
+		}
+		
+		setPieces(setOfPieces);
 	}
 	
-	//set a given coordinate to have the given pieece:
-	public void setPiece(int r, int f, Piece piece) {
-		pieces[r][f] = piece;
-	}
-	public void setPiece(CoordinatePiece coordinatePiece) {
-		setPiece(coordinatePiece.pos.rank, coordinatePiece.pos.file, coordinatePiece.piece);
-	}
-	
-	//if the given move is legal, move the piece and return true, otherwise return false. Or ignore legality of not checkIfLegal
-	public boolean movePiece(int fromRank, int fromFile, int toRank, int toFile, boolean checkIfLegal) {
+	//if the given move is legal, move the piece and return true, otherwise return false. Or ignore legality if not checkIfLegal
+	public boolean movePiece(Piece piece, IntPair to, boolean checkCheck) {
 		/*To be legal, all these must be true:
 			-moving a piece of the color whose turn it is
 			-not moving an empty piece
@@ -63,27 +45,41 @@ public class Board {
 			-not putting the friendly king in check
 		*/
 		
-		if ((!checkIfLegal) || (((move % 2 == 0) == (Color.WHITE == pieces[fromRank][fromFile].color)) && pieces[fromRank][fromFile].color != Color.NONE && (pieces[fromRank][fromFile].color != pieces[toRank][toFile].color) && pieces[fromRank][fromFile].isLegalMove(fromRank, fromFile, toRank, toFile) && 0 <= fromRank && fromRank < pieces.length && 0 <= fromFile && fromFile < pieces[0].length)) {
+		Piece capturing = getPieceAt(to);
+		
+		if (((move % 2 == 0) == (Color.WHITE == piece.color)) && (capturing == null || (piece.color != capturing.color)) && piece.isLegalMove(to) && isPairOnBoard(to)) {
 			//check if the friendly king isn't being put in check:
-			if (checkIfLegal) {
-				Board hypotheticalBoard = this.getHypotheticalBoard(fromRank, fromFile, toRank, toFile);
+			if (checkCheck) {
+				Board hypotheticalBoard = this.getHypotheticalBoard(piece, to);
 				
-				CoordinatePiece king = hypotheticalBoard.getKingOfMove(move);
+				King king = hypotheticalBoard.getKingOfMove(move);
 				
-				if (king != null && (((King)king.piece).isInCheck(king.pos.rank, king.pos.file))) {
+				if (king != null && king.isInCheck()) {
 					return false;
 				}
 			}
 			
-			//if the move involves, castling, en passant, etc, then coordinates and pieces to set those coordinates to will be in this list:
-			CoordinatePiece[] special = pieces[fromRank][fromFile].getResultingSpecialSet(fromRank, fromFile, toRank, toFile);
-			for (int i=0; i<special.length; i++) {
-				setPiece(special[i]);
+			//if the move involves castling, en passant, etc, then coordinates and pieces to set to have those coordinates to will be in this list:
+			HashMap<IntPair, Piece> special = piece.getResultingSpecialSet(to);
+			
+			for (Map.Entry i : special.entrySet()) {
+				Piece specialPiece = (Piece)i.getValue();
+				IntPair position = (IntPair)i.getKey();
+				
+				if (specialPiece.pos == position) {//i'll indicate removal by having the key equal to the position
+					pieces.remove(specialPiece);
+				}else {
+					specialPiece.pos = position;
+				}
 			}
 			
-			//move the main piece thats being moved:
-			setPiece(toRank, toFile, pieces[fromRank][fromFile]);
-			setPiece(fromRank, fromFile, new NoPiece(this));
+			//remove captured piece:
+			if (capturing != null) {
+				pieces.remove(capturing);
+			}
+			
+			//move the piece that's being moved:
+			piece.pos = to;
 			
 			move += 1;
 			
@@ -93,33 +89,46 @@ public class Board {
 		//move illegal, do nothing:
 		return false;
 	}
-	public boolean movePiece(int fromRank, int fromFile, int toRank, int toFile) {
-		return movePiece(fromRank, fromFile, toRank, toFile, true);
+	public boolean movePiece(Piece piece, IntPair to) {
+		return movePiece(piece, to, true);
+	}
+	public boolean movePiece(IntPair from, IntPair to, boolean checkCheck) {
+		return movePiece(getPieceAt(from), to, checkCheck);
+	}
+	public boolean movePiece(IntPair from, IntPair to) {
+		return movePiece(getPieceAt(from), to, true);
+	}
+	
+	//returns the piece at the given coordinates:
+	public Piece getPieceAt(int rank, int file) {
+		for (Piece i : pieces) {
+			if (i.pos.rank == rank && i.pos.file == file) {
+				return i;
+			}
+		}
+		
+		return null;
+	}
+	public Piece getPieceAt(IntPair pos) {
+		return getPieceAt(pos.rank, pos.file);
 	}
 	
 	//returns whether the game shouldn't continue:
 	public boolean isGameOver() {
-		CoordinatePiece king = getKingOfMove(move);
+		King king = getKingOfMove(move);
 		
 		//game is over in checkmate or stalemate:
-		return ((King)king.piece).isInCheckmate(king.pos.rank, king.pos.file) || ((King)king.piece).isInStalemate(king.pos.rank, king.pos.file);
+		return king.isInCheckmate() || king.isInStalemate();
 	}
 	
 	//returns the king and position of the color whose turn it would be on the given move
-	public CoordinatePiece getKingOfMove(int kingsMove) {
+	public King getKingOfMove(int kingsMove) {
 		//we'll get the king whose turn it is:
-		Color turnColor = Color.BLACK;
-		if (kingsMove % 2 == 0) {
-			turnColor = Color.WHITE;
-		}
+		Color lookingFor = (kingsMove % 2 == 0) ? Color.WHITE : Color.BLACK;
 		
-		for (int i=0; i<pieces.length; i++) {
-			for (int j=0; j<pieces[i].length; j++) {
-				if (pieces[i][j] instanceof King) {
-					if (pieces[i][j].color == turnColor) {
-						return new CoordinatePiece(pieces[i][j], i, j);
-					}
-				}
+		for (Piece piece : pieces) {
+			if (piece.color == lookingFor && piece.letter == "K") {
+				return (King)piece;
 			}
 		}
 		
@@ -127,17 +136,29 @@ public class Board {
 	}
 	
 	//returns the board that this would be if the given move would be made
-	public Board getHypotheticalBoard(int fromRank, int fromFile, int toRank, int toFile) {
+	public Board getHypotheticalBoard(Piece piece, IntPair to) {
 		Board hypotheticalBoard = new Board();
-		for (int i=0; i<hypotheticalBoard.pieces.length; i++) {
-			for (int j=0; j<hypotheticalBoard.pieces[i].length; j++) {
-				hypotheticalBoard.pieces[i][j] = pieces[i][j].copy(hypotheticalBoard);
+		Piece hypotheticalPiece = piece;
+		for (Piece origialPiece : pieces) {
+			Piece copyPiece = origialPiece.copy(hypotheticalBoard);
+			
+			hypotheticalBoard.pieces.add(copyPiece);
+			
+			if (piece.pos == copyPiece.pos) {//will need to use the piece thats going to be moved:
+				hypotheticalPiece = copyPiece;
 			}
 		}
 		hypotheticalBoard.move = move;
 		
-		hypotheticalBoard.movePiece(fromRank, fromFile, toRank, toFile, false);
+		hypotheticalBoard.movePiece(hypotheticalPiece, to, false);
 		
 		return hypotheticalBoard;
+	}
+	
+	public boolean isPairOnBoard(int rank, int file) {
+		return (0 <= rank && rank < 8 && 0 <= file && file < 8);
+	}
+	public boolean isPairOnBoard(IntPair pair) {
+		return isPairOnBoard(pair.rank, pair.file);
 	}
 }
