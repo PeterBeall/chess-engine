@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.HashSet;
 import java.util.Arrays;
 
-class ChessEngine {
+class Main {
 	public static void main(String[] args) {
 		Board TheBoard = new Board();
 		

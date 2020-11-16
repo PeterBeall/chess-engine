@@ -20,4 +20,4 @@ To test, run TestRunner.java. This uses the JUnit package:
 
 https://github.com/downloads/junit-team/junit/junit-4.10.jar
 
-I dowloaded the jar into C:\JUNIT, and I set CLASSPATH to %CLASSPATH%;C:\JUNIT\junit-4.10.jar;.;
+I dowloaded the jar into C:\JUNIT, and I set CLASSPATH to %CLASSPATH%;C:\JUNIT\junit-4.10.jar;.\main;.\test
