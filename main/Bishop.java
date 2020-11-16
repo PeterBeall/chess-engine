@@ -28,6 +28,9 @@ public class Bishop extends Piece {
 	public ArrayList<IntPair> getLegalMoves() {
 		return getBrqLegalMoves(new IntPair[]{new IntPair(1, 1), new IntPair(1, -1), new IntPair(-1, 1), new IntPair(-1, -1)});
 	}
+	public ArrayList<IntPair> getLegalMoves(boolean checkCheck) {
+		return getLegalMoves();
+	}
 	
 	public Bishop copy(Board newBoard) {
 		return new Bishop(color, newBoard, pos);

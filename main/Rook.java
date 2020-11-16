@@ -28,6 +28,9 @@ public class Rook extends Piece {
 	public ArrayList<IntPair> getLegalMoves() {
 		return getBrqLegalMoves(new IntPair[]{new IntPair(1, 0), new IntPair(0, 1), new IntPair(-1, 0), new IntPair(0, -1)});
 	}
+	public ArrayList<IntPair> getLegalMoves(boolean checkCheck) {
+		return getLegalMoves();
+	}
 	
 	public Rook copy(Board newBoard) {
 		return new Rook(color, newBoard, pos);

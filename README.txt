@@ -1,7 +1,5 @@
 This is a simple chess program I'm working on. I will make a chess board on which pieces can be moved only legally. After that, I might make a chess computer which the user can play against. 
 
-The main method is in ChessEngine.java, so run that file using the terminal.
-
 The board is just displayed as text in the terminal. White pieces are letters in parentheses, black pieces are in curly brackets, and empty spaces are in square brackets. For example, the starting position looks like this:
 
 r\f a  b  c  d  e  f  g  h

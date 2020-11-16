@@ -33,11 +33,6 @@ public class Pawn extends Piece {
 	public boolean isLegalMove(IntPair to) {
 		//If a pawn is moving from a file to the same file, then it should be moving and not capturing anything. It can move forward by 1 square, and also by 2 squares if it is on it's side's second row.
 		if (pos.file == to.file && board.getPieceAt(to) == null && ((to.rank-pos.rank == direction*1) || ((to.rank-pos.rank) == direction*2 && board.getPieceAt(to.rank-direction*1, to.file) == null && ((color == Color.WHITE && pos.rank == 1) || (color == Color.BLACK && pos.rank == 6))))) {
-			//If its moving forward by 2, we need to note that it did at this move in case en passant applies next move:
-			if (to.rank-pos.rank == direction*2) {
-				lastMoveSpecialMove = board.move;
-			}
-			
 			return true;
 		}
 		
@@ -54,7 +49,7 @@ public class Pawn extends Piece {
 		
 		Piece capturing = board.getPieceAt(to.rank-direction, to.file);
 		//en passant is possible if there is a pawn in front of the to square which is an enemy pawn that moved forward by 2 squares last move
-		if (tryingToCapture(to) && capturing != null && (capturing.lastMoveSpecialMove == board.move-1 && board.getPieceAt(to.rank-direction, to.file).letter == letter && (board.getPieceAt(to.rank-direction, to.file).color != color))) {
+		if (tryingToCapture(to) && capturing != null && (capturing.lastMove == board.move-1 && board.getPieceAt(to.rank-direction, to.file).letter == letter && (board.getPieceAt(to.rank-direction, to.file).color != color))) {
 			//the board needs to remove the captured pawn:
 			pieceToCapture.put(capturing.pos, capturing);
 		}
@@ -79,6 +74,9 @@ public class Pawn extends Piece {
 		}
 		
 		return legalMoves;
+	}
+	public ArrayList<IntPair> getLegalMoves(boolean checkCheck) {
+		return getLegalMoves();
 	}
 	
 	public Pawn copy(Board newBoard) {

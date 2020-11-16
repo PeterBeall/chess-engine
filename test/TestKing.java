@@ -102,4 +102,99 @@ public class TestKing {
 		
 		assertFalse(testKing.isInCheckmate());
 	}
+	
+	//castling:
+	@Test
+	public void testKing_castle_kingside_legal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 7));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		
+		testBoard.movePiece(testKing, new IntPair(0, 6));
+		
+		assertEquals(testKing, testBoard.getPieceAt(0, 6));
+		assertEquals(testRook, testBoard.getPieceAt(0, 5));
+	}
+	
+	@Test
+	public void testKing_castle_kingside_illegal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 7));
+		Bishop testEnemyBishop = new Bishop(Color.BLACK, testBoard, new IntPair(7, 7));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		testBoard.pieces.add(testEnemyBishop);
+		
+		testBoard.movePiece(testRook, new IntPair(1, 7));
+		testBoard.movePiece(testEnemyBishop, new IntPair(6, 6));
+		testBoard.movePiece(testRook, new IntPair(0, 7));
+		
+		assertFalse(testBoard.movePiece(testKing, new IntPair(0, 6)));
+	}
+	
+	@Test
+	public void testKing_castle_queenside_legal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 0));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		
+		testBoard.movePiece(testKing, new IntPair(0, 2));
+		
+		assertEquals(testKing, testBoard.getPieceAt(0, 2));
+		assertEquals(testRook, testBoard.getPieceAt(0, 3));
+	}
+	
+	@Test
+	public void testKing_castle_queenside_illegal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 0));
+		Bishop testEnemyBishop = new Bishop(Color.BLACK, testBoard, new IntPair(7, 7));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		testBoard.pieces.add(testEnemyBishop);
+		
+		testBoard.movePiece(testRook, new IntPair(1, 7));
+		testBoard.movePiece(testEnemyBishop, new IntPair(6, 6));
+		testBoard.movePiece(testRook, new IntPair(0, 7));
+		
+		assertFalse(testBoard.movePiece(testKing, new IntPair(0, 6)));
+	}
+	
+	@Test
+	public void testKing_castle_outofCheck_illegal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 7));
+		Bishop testEnemyBishop = new Bishop(Color.BLACK, testBoard, new IntPair(1, 5));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		testBoard.pieces.add(testEnemyBishop);
+		
+		assertFalse(testBoard.movePiece(testKing, new IntPair(0, 6)));
+	}
+	
+	@Test
+	public void testKing_castle_intoCheck_illegal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 7));
+		Bishop testEnemyBishop = new Bishop(Color.BLACK, testBoard, new IntPair(1, 7));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		testBoard.pieces.add(testEnemyBishop);
+		
+		assertFalse(testBoard.movePiece(testKing, new IntPair(0, 6)));
+	}
+	
+	@Test
+	public void testKing_castle_throughCheck_illegal() {
+		Rook testRook = new Rook(Color.WHITE, testBoard, new IntPair(0, 7));
+		Bishop testEnemyBishop = new Bishop(Color.BLACK, testBoard, new IntPair(1, 6));
+		
+		testBoard.pieces.add(testKing);
+		testBoard.pieces.add(testRook);
+		testBoard.pieces.add(testEnemyBishop);
+		
+		assertFalse(testBoard.movePiece(testKing, new IntPair(0, 6)));
+	}
 }

@@ -6,7 +6,7 @@ public interface PieceInterface {
 	public boolean isLegalMove(IntPair to);
 	
 	//returns list of possibly legal moves
-	public ArrayList<IntPair> getLegalMoves();
+	public ArrayList<IntPair> getLegalMoves(boolean checkCheck);
 	
 	//given coordinates of a possible move, returns a list containing pieces to remove or to move to
 	public HashMap<IntPair, Piece> getResultingSpecialSet(IntPair to);

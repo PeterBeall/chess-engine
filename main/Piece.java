@@ -5,7 +5,7 @@ abstract class Piece implements PieceInterface {
 	public String letter;
 	public Color color;
 	public Board board;
-	public int lastMoveSpecialMove = -2;
+	public int lastMove = -2;
 	public IntPair pos;
 	
 	public Piece(Color color, String letter, Board board, IntPair pos) {
@@ -28,6 +28,10 @@ abstract class Piece implements PieceInterface {
 	public Piece(Color color, String letter) {
 		this.letter = letter;
 		this.color = color;
+	}
+	
+	public ArrayList<IntPair> getLegalMoves() {
+		return this.getLegalMoves(true);
 	}
 	
 	public HashMap<IntPair, Piece> getResultingSpecialSet(IntPair to) {return new HashMap<IntPair, Piece>();};

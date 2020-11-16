@@ -30,6 +30,26 @@ class Main {
 			startingPieces.add(new Pawn(Color.WHITE, TheBoard, 1, i));
 			startingPieces.add(new Pawn(Color.BLACK, TheBoard, 6, i));
 		}
+		/*HashSet<Piece> startingPieces = new HashSet<Piece>(Arrays.asList(
+			new King(Color.WHITE, TheBoard, 0, 2),
+			new Pawn(Color.WHITE, TheBoard, 1, 0),
+			new Pawn(Color.WHITE, TheBoard, 1, 1),
+			new Pawn(Color.WHITE, TheBoard, 1, 2),
+			new Pawn(Color.WHITE, TheBoard, 1, 5),
+			new Pawn(Color.WHITE, TheBoard, 1, 6),
+			new Pawn(Color.WHITE, TheBoard, 1, 7),
+			new Pawn(Color.WHITE, TheBoard, 3, 4),
+			new Rook(Color.WHITE, TheBoard, 0, 3),
+			new Bishop(Color.WHITE, TheBoard, 4, 6),
+			new Knight(Color.BLACK, TheBoard, 7, 1),
+			new Pawn(Color.BLACK, TheBoard, 6, 0),
+			new Pawn(Color.BLACK, TheBoard, 6, 5),
+			new Pawn(Color.BLACK, TheBoard, 6, 6),
+			new Pawn(Color.BLACK, TheBoard, 6, 7),
+			new Queen(Color.BLACK, TheBoard, 5, 4),
+			new King(Color.BLACK, TheBoard, 7, 4),
+			new Bishop(Color.BLACK, TheBoard, 7, 5),
+			new Rook(Color.BLACK, TheBoard, 7, 7)));*/
 		
 		//A Board object will store the pieces in their positions. Board.pieces[i][j] is the piece in rank i+1 and file j+1.
 		TheBoard.setPieces(startingPieces);
@@ -50,7 +70,7 @@ class Main {
 			IntPair to;			
 			
 			do {
-				//TheBoad.move is an integer that should increase by 1 every move.
+				//TheBoard.move is an integer that should increase by 1 every move.
 				if (TheBoard.move % 2 == 0) {
 					System.out.print("White's turn. ");
 				}else {
@@ -58,7 +78,10 @@ class Main {
 				}
 				System.out.println("Enter the file (a-h) and rank (1-8) of the piece to move and the position to move to, e.g. \"e2e4\"");
 				
-				String enteredMove = scanner.next();
+				String enteredMove = "";
+				while (enteredMove.length()!=4) {
+					enteredMove = scanner.next();
+				}
 				
 				fromFile = enteredMove.charAt(0)-97;//'a'->0, 'b'->1, etc, since everywhere else files are integers.
 				fromRank = enteredMove.charAt(1)-49;
@@ -69,7 +92,7 @@ class Main {
 				to = new IntPair(toRank, toFile);
 								
 				//retry until the move given is legal
-			} while (!TheBoard.movePiece(from, to));
+			} while (!TheBoard.isPairOnBoard(from) || !TheBoard.isPairOnBoard(to) || !TheBoard.movePiece(from, to));
 			
 			PrintBoard(TheBoard);
 		}

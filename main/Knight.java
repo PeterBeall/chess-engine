@@ -32,6 +32,9 @@ public class Knight extends Piece {
 		
 		return legalMoves;
 	}
+	public ArrayList<IntPair> getLegalMoves(boolean checkCheck) {
+		return getLegalMoves();
+	}
 	
 	public Knight copy(Board newBoard) {
 		return new Knight(color, newBoard, pos);

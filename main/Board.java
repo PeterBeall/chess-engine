@@ -47,7 +47,7 @@ public class Board {
 		
 		Piece capturing = getPieceAt(to);
 		
-		if (((move % 2 == 0) == (Color.WHITE == piece.color)) && (capturing == null || (piece.color != capturing.color)) && piece.isLegalMove(to) && isPairOnBoard(to)) {
+		if (((move % 2 == 0) == (Color.WHITE == piece.color)) && (capturing == null || (piece.color != capturing.color)) && (!checkCheck || piece.isLegalMove(to)) && isPairOnBoard(to)) {
 			//check if the friendly king isn't being put in check:
 			if (checkCheck) {
 				Board hypotheticalBoard = this.getHypotheticalBoard(piece, to);
@@ -80,6 +80,7 @@ public class Board {
 			
 			//move the piece that's being moved:
 			piece.pos = to;
+			piece.lastMove = move;
 			
 			move += 1;
 			
